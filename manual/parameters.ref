@@ -1,0 +1,2 @@
+orm.path.data.continents        Path to the directory containing the continent data files.
+orm.path.data.countries         Path to the directory containing the country data files.

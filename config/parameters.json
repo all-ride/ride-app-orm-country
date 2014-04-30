@@ -1,0 +1,4 @@
+{
+    "orm.path.data.continents": "%path%/data/orm/continents",
+    "orm.path.data.countries": "%path%/data/orm/countries"
+}

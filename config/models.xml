@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+    <model name="Continent" modelClass="ride\application\orm\model\ContinentModel" dataClass="ride\application\orm\model\Continent">
+        <field name="code" type="string">
+            <validation name="required" />
+        </field>
+        <field name="name" type="string" localized="true">
+            <validation name="required" />
+        </field>
+        <field name="countries" model="Country" relation="hasMany" relationOrder="{name} ASC">
+            <option name="scaffold.form.omit" value="1" />
+        </field>
+
+        <index name="code">
+            <indexField name="code" />
+        </index>
+
+        <format name="title">{name}</format>
+        <format name="teaser">{code}</format>
+    </model>
+    <model name="Country" modelClass="ride\application\orm\model\CountryModel" dataClass="ride\application\orm\model\Country">
+        <field name="code" type="string">
+            <validation name="required" />
+        </field>
+        <field name="name" type="string" localized="true">
+            <validation name="required" />
+        </field>
+        <field name="continent" model="Continent" relation="belongsTo" />
+
+        <index name="code">
+            <indexField name="code" />
+        </index>
+
+        <format name="title">{name}</format>
+        <format name="teaser">{code} ({continent})</format>
+    </model>
+</models>
