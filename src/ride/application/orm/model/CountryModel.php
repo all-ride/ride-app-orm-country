@@ -13,58 +13,17 @@ use \Exception;
 class CountryModel extends GenericModel {
 
     /**
-     * Initializes the save stack
-     * @return null
-     */
-    protected function initialize() {
-        $this->dataListDepth = 0;
-
-        parent::initialize();
-    }
-
-    /**
-     * Gets a list of the data in this model, useful for eg. select fields
-     * @param array $options Options for the query
-     * @return array Array with the id of the data as key and a string
-     * representation as value
-     * @see getDataListQuery
-     */
-    public function getDataList(array $options = null) {
-        if (!isset($options['order']['field'])) {
-            $options['order']['field'] = 'name';
-        }
-
-        return parent::getDataList($options);
-    }
-
-    /**
-     * Gets all the countries
-     * @param boolean $recursiveDepth
-     * @param string $locale
-     * @param boolean $includeUnlocalized
-     * @return array
-     */
-    public function getCountries($recursiveDepth = 0, $locale = null, $includeUnlocalized = true) {
-        $query = $this->createQuery($locale);
-        $query->setRecursiveDepth($recursiveDepth);
-        $query->setIncludeUnlocalizedData($includeUnlocalized);
-        $query->addOrderBy('{name} ASC');
-
-        return $query->query();
-    }
-
-    /**
      * Gets a country by it's code
      * @param string $code
-     * @param integer $recursiveDepth
      * @param string $locale
-     * @param boolean $includeUnlocalized
+     * @param boolean $fetchUnlocalized
+     * @param integer $recursiveDepth
      * @return Country|null
      */
-    public function getByCode($code, $recursiveDepth = 0, $locale = null, $includeUnlocalized = true) {
+    public function getByCode($code, $locale = null, $fetchUnlocalized = true, $recursiveDepth = 0) {
         $query = $this->createQuery($locale);
         $query->setRecursiveDepth($recursiveDepth);
-        $query->setIncludeUnlocalizedData($includeUnlocalized);
+        $query->setFetchUnlocalized($fetchUnlocalized);
         $query->addCondition('{code} = %1%', $code);
 
         return $query->queryFirst();
@@ -100,15 +59,15 @@ class CountryModel extends GenericModel {
                     if (isset($countries[$countryCode])) {
                         $country = $countries[$countryCode];
                     } else {
-                        $country = $this->createData();
-                        $country->code = $countryCode;
-                        $country->continent = $this->getContinentForCountry($continentCountryCodes, $continents, $countryCode);
+                        $country = $this->createEntry();
+                        $country->setCode($countryCode);
+                        $country->setContinent($this->getContinentForCountry($continentCountryCodes, $continents, $countryCode));
 
                         $countries[$countryCode] = $country;
                     }
 
-                    $country->name = $countryName;
-                    $country->dataLocale = $locale;
+                    $country->setName($countryName);
+                    $country->setLocale($locale);
 
                     $this->save($country);
                 }
@@ -124,15 +83,17 @@ class CountryModel extends GenericModel {
 
     /**
      * Gets the id of the continent for the provided country
-     * @param array $continentCountryCodes Array with the continent code as key and an array with country codes as value
-     * @param array $continents Array with the continent code as key and continent data objects as value
+     * @param array $continentCountryCodes Array with the continent code as key
+     * and an array with country codes as value
+     * @param array $continents Array with the continent code as key and a
+     * continent entry as value
      * @param string $countryCode Code of the country
-     * @return integer Primary key of the continent if found, 0 otherwise
+     * @return Continent|null Instance of the continent if found, null otherwise
      */
     private function getContinentForCountry(array $continentCountryCodes, array $continents, $countryCode) {
         foreach ($continentCountryCodes as $continentCode => $continentCountries) {
             if (in_array($countryCode, $continentCountries) && isset($continents[$continentCode])) {
-                return $continents[$continentCode]->id;
+                return $continents[$continentCode];
             }
         }
 
