@@ -2,37 +2,19 @@
 
 namespace ride\application\orm\model;
 
-use ride\library\orm\model\data\Data;
+use ride\application\orm\entry\CountryEntry;
 
 /**
  * Country data container
  */
-class Country extends Data {
-
-    /**
-     * Code of the country
-     * @var string
-     */
-    public $code;
-
-    /**
-     * Name of the country
-     * @var string
-     */
-    public $name;
-
-    /**
-     * Continent of the country
-     * @var Continent|integer
-     */
-    public $continent;
+class Country extends CountryEntry {
 
     /**
      * Gets a string representation of this data
      * @return string
      */
     public function __toString() {
-        return $this->name . ' (' . $this->code . ')';
+        return $this->getName() . ' (' . $this->getCode() . ')';
     }
 
 }

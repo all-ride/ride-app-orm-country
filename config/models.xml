@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <models>
-    <model name="Continent" modelClass="ride\application\orm\model\ContinentModel" dataClass="ride\application\orm\model\Continent">
+    <model name="Continent" modelClass="ride\application\orm\model\ContinentModel" entryClass="ride\application\orm\model\Continent">
         <field name="code" type="string">
             <validation name="required" />
+
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
         </field>
         <field name="name" type="string" localized="true">
             <validation name="required" />
+
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
         </field>
         <field name="countries" model="Country" relation="hasMany" relationOrder="{name} ASC">
             <option name="scaffold.form.omit" value="1" />
@@ -17,13 +23,21 @@
 
         <format name="title">{name}</format>
         <format name="teaser">{code}</format>
+
+        <option name="order.field" value="name" />
     </model>
-    <model name="Country" modelClass="ride\application\orm\model\CountryModel" dataClass="ride\application\orm\model\Country">
+    <model name="Country" modelClass="ride\application\orm\model\CountryModel" entryClass="ride\application\orm\model\Country">
         <field name="code" type="string">
             <validation name="required" />
+
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
         </field>
         <field name="name" type="string" localized="true">
             <validation name="required" />
+
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
         </field>
         <field name="continent" model="Continent" relation="belongsTo" />
 
@@ -33,5 +47,7 @@
 
         <format name="title">{name}</format>
         <format name="teaser">{code} ({continent})</format>
+
+        <option name="order.field" value="name" />
     </model>
 </models>

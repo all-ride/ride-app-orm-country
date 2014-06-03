@@ -13,47 +13,6 @@ use \Exception;
 class ContinentModel extends GenericModel {
 
     /**
-     * Initializes the save stack
-     * @return null
-     */
-    protected function initialize() {
-        $this->dataListDepth = 0;
-
-        parent::initialize();
-    }
-
-    /**
-     * Gets a list of the data in this model, useful for eg. select fields
-     * @param array $options Options for the query
-     * @return array Array with the id of the data as key and a string
-     * representation as value
-     * @see getDataListQuery
-     */
-    public function getDataList(array $options = null) {
-        if (!isset($options['order']['field'])) {
-            $options['order']['field'] = 'name';
-        }
-
-        return parent::getDataList($options);
-    }
-
-    /**
-     * Gets all the continents
-     * @param string $locale
-     * @param integer $recursiveDepth
-     * @param boolean $includeUnlocalized
-     * @return array
-     */
-    public function getContinents($locale = null, $recursiveDepth = 0, $includeUnlocalized = true) {
-        $query = $this->createQuery($locale);
-        $query->setRecursiveDepth($recursiveDepth);
-        $query->setFetchUnlocalizedData($includeUnlocalized);
-        $query->addOrderBy('{name} ASC');
-
-        return $query->query();
-    }
-
-    /**
      * Installs the continents from a data directory
      * @param \ride\library\system\file\File $path Path for the data files
      * @param array $locales Array with locale codes
@@ -80,14 +39,14 @@ class ContinentModel extends GenericModel {
                     if (isset($continents[$continentCode])) {
                         $continent = $continents[$continentCode];
                     } else {
-                        $continent = $this->createData();
-                        $continent->code = $continentCode;
+                        $continent = $this->createEntry();
+                        $continent->setCode($continentCode);
 
                         $continents[$continentCode] = $continent;
                     }
 
-                    $continent->name = $continentName;
-                    $continent->dataLocale = $locale;
+                    $continent->setName($continentName);
+                    $continent->setLocale($locale);
 
                     $this->save($continent);
                 }
