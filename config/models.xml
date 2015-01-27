@@ -25,6 +25,7 @@
         <format name="teaser">{code}</format>
 
         <option name="order.field" value="name" />
+        <option name="rest.expose" value="1"/>
     </model>
     <model name="Country" modelClass="ride\application\orm\model\CountryModel" entryClass="ride\application\orm\model\Country">
         <field name="code" type="string">
@@ -49,5 +50,6 @@
         <format name="teaser">{code} ({continent})</format>
 
         <option name="order.field" value="name" />
+        <option name="rest.expose" value="1"/>
     </model>
 </models>
